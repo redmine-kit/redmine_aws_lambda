@@ -1,0 +1,10 @@
+en:
+  label_aws_lambda_function: Lambda function
+  label_aws_lambda_fixed_settings: Read-only settings
+  field_aws_lambda_function_name: Function name
+  field_aws_lambda_function_role: Role
+  field_aws_lambda_function_version: Version
+  field_aws_lambda_function_memory: Memory
+  field_aws_lambda_function_region: Region
+  field_aws_lambda_function_image: Image URI
+  text_aws_lambda_setting_fixed: Can't be set in this environment

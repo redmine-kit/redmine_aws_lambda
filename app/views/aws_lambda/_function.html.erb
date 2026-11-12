@@ -1,0 +1,11 @@
+<h3><%= l(:label_aws_lambda_function) %></h3>
+<% function = RedmineAws::Lambda::Status.function %>
+<%= render partial: 'aws_admin/values', locals: { rows: [
+      { name: l(:field_aws_lambda_function_name), value: function[:name] || '-' },
+      { name: l(:field_aws_lambda_function_role), value: function[:role] || '-', note: 'REDMINE_ROLE' },
+      { name: l(:field_aws_lambda_function_version), value: function[:version] || '-' },
+      { name: l(:field_aws_lambda_function_memory),
+        value: function[:memory] ? "#{number_with_delimiter(function[:memory].to_i)} MB" : '-' },
+      { name: l(:field_aws_lambda_function_region), value: function[:region] || '-' },
+      { name: l(:field_aws_lambda_function_image), value: function[:image] || '-' }
+    ] } %>

@@ -1,0 +1,31 @@
+# Update pull requests for the dependencies. New versions wait a few days
+# (3 for patches, 7 otherwise) before an update is proposed. Action updates
+# also update .github/workflows/actions.lock.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+      semver-patch-days: 3
+  - package-ecosystem: docker-compose
+    directory: /test
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+      semver-patch-days: 3
+  - package-ecosystem: docker
+    directory: /test
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+      semver-patch-days: 3
+    # The Rubies of Redmine 7.0 (test/ruby-3.2.Dockerfile, test/ruby-4.0.Dockerfile,
+    # test/Dockerfile): new digests only, not ruby:3.3 or ruby:4.1.
+    ignore:
+      - dependency-name: ruby
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]

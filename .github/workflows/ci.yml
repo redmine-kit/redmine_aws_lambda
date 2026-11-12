@@ -1,0 +1,130 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint (Ruby ${{ matrix.ruby }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # The Rubies of Redmine 7.0 (3.2 to 4.0), pinned in
+        # test/ruby-<version>.Dockerfile.
+        ruby: ["3.2", "4.0"]
+    env:
+      TEST_RUBY: ${{ matrix.ruby }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - run: bin/lint
+
+  test:
+    needs: lint
+    name: test (Ruby ${{ matrix.ruby }})
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.2", "4.0"]
+    env:
+      TEST_RUBY: ${{ matrix.ruby }}
+    # id-token: Codecov's upload with OIDC, without a token secret.
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      # redmine_aws, which the plugin requires, until the tests install its
+      # gem. The plugin's .dockerignore keeps it out of the plugin's image.
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: redmine-kit/redmine_aws
+          path: redmine_aws
+          persist-credentials: false
+      # The plugin's tests, then every Redmine test with the plugin installed.
+      - run: bin/test --redmine
+        env:
+          REDMINE_AWS_DIR: redmine_aws
+      # The plugin's coverage (coverage/coverage.xml, written by bin/test).
+      # Not failing the run while the Codecov app is not installed.
+      - if: matrix.ruby == '4.0'
+        uses: codecov/codecov-action@v7.1.1
+        with:
+          use_oidc: true
+          files: coverage/coverage.xml
+          fail_ci_if_error: false
+      - if: always()
+        run: bin/services --down
+
+  # The tests against the latest release of redmine_aws (its newest v0.1.*
+  # tag, the source of the published gem), as well as against its main
+  # above: adapters install the release. Skipped until there is one.
+  release:
+    needs: lint
+    name: test (redmine_aws release)
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - id: release
+        run: |
+          tag=$(git ls-remote --tags --refs https://github.com/redmine-kit/redmine_aws.git 'v0.1.*' |
+            sed 's|.*refs/tags/||' | sort -V | tail -n 1)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          [[ -n "$tag" ]] || echo "::notice::redmine_aws has no v0.1.* release yet; not tested against one"
+      - if: steps.release.outputs.tag != ''
+        uses: actions/checkout@v7.0.1
+        with:
+          repository: redmine-kit/redmine_aws
+          ref: ${{ steps.release.outputs.tag }}
+          path: redmine_aws
+          persist-credentials: false
+      - if: steps.release.outputs.tag != ''
+        run: bin/test
+        env:
+          REDMINE_AWS_DIR: redmine_aws
+      - if: always() && steps.release.outputs.tag != ''
+        run: bin/services --down
+
+  # The plugin as a gem (bin/test-gem): built with redmine_aws's, installed,
+  # linked into plugins/ and booted with eager_load, as adapters install it,
+  # so that a broken gem shows before a version tag publishes it.
+  gem:
+    needs: lint
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: redmine-kit/redmine_aws
+          path: redmine_aws
+          persist-credentials: false
+      - run: bin/test-gem
+        env:
+          REDMINE_AWS_DIR: redmine_aws
+      - if: always()
+        run: bin/services --down

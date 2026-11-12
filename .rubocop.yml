@@ -1,0 +1,17 @@
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  SuggestExtensions: false
+  Include:
+    - '**/*.rb'
+    - '**/*.rake'
+    - '**/*.gemspec'
+    - '**/Gemfile'
+    - 'Gemfile.lint'
+
+Style/Documentation:
+  Enabled: false
+
+# Metrics and line length: RuboCop's defaults, in tests too. A method that a
+# default really doesn't fit disables the cop on that method, with the reason
+# (rubocop:disable Metrics/... -- <reason>).

@@ -1,0 +1,10 @@
+<h3><%= l(:label_aws_lambda_fixed_settings) %></h3>
+<% if RedmineAws::Lambda.lambda? %>
+<%= render partial: 'aws_admin/values', locals: {
+      rows: RedmineAws::Lambda::Status.fixed_settings.map { |name, value|
+        { name: l(:"setting_#{name}"), value: format_object(value.to_s == '1'), note: name }
+      }
+    } %>
+<% else %>
+<p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
