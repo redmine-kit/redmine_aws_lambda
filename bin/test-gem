@@ -42,4 +42,8 @@ docker run --rm --network redmine-aws-lambda-test_default "$image" sh -ec '
     dir = File.realpath(plugin.directory)
     abort %(redmine_aws_lambda is not the installed gem: #{dir}) unless dir.start_with?(Gem.dir)
     abort %(not eager loaded) unless Rails.application.config.eager_load
+    # Bundler loaded the boot file (it ignores a missing one): without it,
+    # Lambda would have no /events and forwarded host middlewares.
+    abort %(boot/redmine_aws_lambda.rb not loaded) unless \$LOADED_FEATURES.any? { |f| f.end_with?(%(/boot/redmine_aws_lambda.rb)) }
+    abort %(no /events middleware) unless Rails.application.middleware.include?(RedmineAws::Lambda::Boot::EventsMiddleware)
     puts %(redmine_aws_lambda #{plugin.version} from #{dir}: RedmineAws::Lambda #{RedmineAws::Lambda::VERSION})"'
