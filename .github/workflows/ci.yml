@@ -47,6 +47,8 @@ jobs:
         ruby: ["3.2", "4.0"]
     env:
       TEST_RUBY: ${{ matrix.ruby }}
+      # The plugin's coverage (bin/test), on the Ruby whose report is uploaded.
+      COVERAGE: ${{ matrix.ruby == '4.0' && '1' || '' }}
     # id-token: Codecov's upload with OIDC, without a token secret.
     permissions:
       contents: read
@@ -73,6 +75,7 @@ jobs:
         with:
           use_oidc: true
           files: coverage/coverage.xml
+          flags: plugin
           fail_ci_if_error: false
       - if: always()
         run: bin/services --down
