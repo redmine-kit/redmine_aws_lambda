@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# The plugin's tests in Redmine 7.0.3 on PostgreSQL 16, in Docker.
+# The plugin's tests in Redmine 7.0.3 on PostgreSQL 16, in Apple container
+# when it runs, else in Docker (CI; CONTAINER_CLI=container|docker chooses).
 #   bin/test                 # the plugin's tests, then the Redmine tests around the replaced code
 #   bin/test --redmine       # also every Redmine test, with the plugin installed
 #   bin/test <files>         # some files of the plugin's tests
@@ -10,34 +11,42 @@
 # shellcheck disable=SC2016
 set -euo pipefail
 cd "$(dirname "$0")/.."
-image=redmine-kit-aws-lambda-test
+source bin/container_cli
+source bin/test_slot
+plugin=redmine_kit_aws_lambda
+name=redmine-kit-aws-lambda-test
 bin/services >/dev/null
-# redmine_kit_aws, which the plugin requires: a checkout next to this one, or
-# REDMINE_KIT_AWS_DIR.
-aws_dir=${REDMINE_KIT_AWS_DIR:-../redmine_kit_aws}
-[[ -f "$aws_dir/init.rb" ]] || { echo "redmine_kit_aws is not in $aws_dir; set REDMINE_KIT_AWS_DIR" >&2; exit 1; }
-# test/Dockerfile on the Ruby of TEST_RUBY (default 4.0), whose image is
-# pinned in test/ruby-<version>.Dockerfile, in place of its FROM ruby line.
-ruby=$(sed -n 's/^FROM //p' "test/ruby-${TEST_RUBY:-4.0}.Dockerfile")
-dockerfile() {
-  sed "s|^FROM ruby:[^ ]*|FROM $ruby|" test/Dockerfile
-}
-dockerfile | docker buildx build --load -q -t "$image" --build-context redmine_kit_aws="$aws_dir" -f - . >/dev/null
+source bin/test_image
+if [[ "$cli" == docker ]]; then
+  network=${name}_default
+  opts=(-e PARALLEL_WORKERS="${PARALLEL_WORKERS:-4}")
+else
+  # PostgreSQL by its address, and more memory than the 1 GB a container
+  # gets by default.
+  network=$name
+  opts=(-m 4G -e PARALLEL_WORKERS="${PARALLEL_WORKERS:-2}" -e TEST_DATABASE_HOST="$(container_address "$name-postgres")")
+fi
+# A database of this run's own (test/database.yml), dropped when the tests end.
+db="redmine_test_$$"
+setup='bin/rails db:drop db:create db:migrate redmine:plugins:migrate db:schema:dump >/dev/null'
+teardown='; status=$?; bin/rails db:drop >/dev/null 2>&1; exit $status'
 run() {
-  docker run --rm --network redmine-kit-aws-lambda-test_default -e PARALLEL_WORKERS="${PARALLEL_WORKERS:-4}" "$image" \
-    sh -c 'bin/rails db:drop db:create db:migrate db:schema:dump >/dev/null && "$@"' test "$@"
+  "$cli" run --rm --network "$network" "${opts[@]}" -e TEST_DATABASE="$db" "$image" \
+    sh -c "$setup"' && "$@"'"$teardown" test "$@"
 }
 # The plugin's tests; with COVERAGE set, in one process with the coverage
 # written to coverage/coverage.xml (test/test_helper.rb). COVERAGE itself is not
 # passed on: Redmine's test helper would start a SimpleCov of its own.
 run_plugin() {
-  local cov=(-e PARALLEL_WORKERS="${PARALLEL_WORKERS:-4}")
-  if [[ -n "${COVERAGE:-}" ]]; then
-    rm -f coverage/.resultset.json && mkdir -p coverage
-    cov=(-e PLUGIN_COVERAGE=1 -e PARALLEL_WORKERS=1 -v "$PWD/coverage:/redmine/plugins/redmine_kit_aws_lambda/coverage")
+  if [[ -z "${COVERAGE:-}" ]]; then
+    run "$@"
+    return
   fi
-  docker run --rm "${cov[@]}" --network redmine-kit-aws-lambda-test_default "$image" \
-    sh -c 'bin/rails db:drop db:create db:migrate redmine:plugins:migrate db:schema:dump >/dev/null && "$@"' test "$@"
+  rm -f coverage/.resultset.json && mkdir -p coverage
+  local saved=("${opts[@]}")
+  opts+=(-e PLUGIN_COVERAGE=1 -e PARALLEL_WORKERS=1 -v "$PWD/coverage:/redmine/plugins/$plugin/coverage")
+  run "$@"
+  opts=("${saved[@]}")
 }
 redmine_tests=(test/unit/setting_test.rb test/functional/settings_controller_test.rb
   test/functional/repositories_controller_test.rb test/functional/sys_controller_test.rb
@@ -45,11 +54,11 @@ redmine_tests=(test/unit/setting_test.rb test/functional/settings_controller_tes
 # Redmine's tests that fail with the current gems for known reasons.
 known=$(grep -v -e '^#' -e '^$' test/redmine_known_failures.txt | sed 's/[.]/\\./g' | paste -sd '|' -)
 if [[ "${1:-}" == "--redmine" ]]; then
-  run_plugin bin/rails test plugins/redmine_kit_aws_lambda/test
+  run_plugin bin/rails test "plugins/$plugin/test"
   run bin/rails test --exclude "/^($known)\$/"
 elif (($#)); then
-  run bin/rails test "${@/#/plugins/redmine_kit_aws_lambda/}"
+  run bin/rails test "${@/#/plugins/$plugin/}"
 else
-  run_plugin bin/rails test plugins/redmine_kit_aws_lambda/test
+  run_plugin bin/rails test "plugins/$plugin/test"
   run bin/rails test "${redmine_tests[@]}"
 fi

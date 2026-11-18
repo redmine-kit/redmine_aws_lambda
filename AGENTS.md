@@ -12,7 +12,7 @@ Redmine Kit AWS Lambda (`redmine_kit_aws_lambda`) is a Redmine plugin for runnin
 - **Features can be turned on separately:** each feature has the condition that turns it on; without it, Redmine behaves as standard.
 - **Replaced code:** the plugin replaces only the readers of the settings that cannot work on Lambda ([admin.md](docs/admin.md#redmine-settings-that-cannot-work-on-lambda)). When Redmine is upgraded, check that the original code has not changed.
 - **Shared parts in redmine_kit_aws:** the administration menu, the Status tab and the test support come from redmine_kit_aws ([its API](https://github.com/redmine-kit/redmine_aws/blob/main/docs/api.md)). What every AWS plugin needs goes there, not here.
-- **Tests:** replaced and added code has tests, run with Redmine's own mechanism (`bin/test` runs them in Docker with redmine_kit_aws from `../redmine_kit_aws` or `REDMINE_KIT_AWS_DIR`; [setup.md](docs/setup.md#tests)). The test plan is in Serverless ([testing.md](https://github.com/redmine-kit/serverless/blob/main/docs/testing.md#plugin-tests)).
+- **Tests:** replaced and added code has tests, run with Redmine's own mechanism (`bin/test` runs them in a container (Apple container, else Docker) with redmine_kit_aws from `../redmine_kit_aws` or `REDMINE_KIT_AWS_DIR`; [setup.md](docs/setup.md#tests)). The test plan is in Serverless ([testing.md](https://github.com/redmine-kit/serverless/blob/main/docs/testing.md#plugin-tests)).
 - **Code layout:** the code is under the `RedmineKitAws` namespace of redmine_kit_aws, as `RedmineKitAws::Lambda`. `boot/redmine_kit_aws_lambda.rb` holds what must be in place before Rails initializes (Bundler loads it; it requires `redmine_kit_aws/inflections` first and defines module `RedmineKitAws::Lambda::Boot`, and nothing else in the namespace), `lib/redmine_kit_aws/lambda.rb` and `lib/redmine_kit_aws/lambda/` and `app/` the rest (Redmine autoloads them; `init.rb` loads `lib/redmine_kit_aws/lambda.rb` when the code loader skipped it and calls `RedmineKitAws::Lambda.setup`). Inside the namespace, write the AWS SDK as `::Aws::…`.
 - **No secrets in the repository.**
 
@@ -29,3 +29,9 @@ Redmine Kit AWS Lambda (`redmine_kit_aws_lambda`) is a Redmine plugin for runnin
 - English, imperative mood, 72 characters or fewer in the first line, no trailing period.
 - One purpose per commit.
 - Do not rewrite pushed history.
+
+## Development environment
+
+- **Apple container first, Docker too** (a public repository). Scripts (`bin/test`, databases, emulators) use Apple container (`container`) when it is installed and running, else Docker (other machines, CI); `CONTAINER_CLI=docker|container` chooses. Docs give both, Apple container first. Images are built from the `Dockerfile` with either tool.
+- **Libraries at their latest versions.** Dependencies are kept at their latest stable releases, pinned exactly in the lockfiles; a version held back has its reason next to the pin.
+- Both are the organization's rules (`../AGENTS.md`, "Development environment").
