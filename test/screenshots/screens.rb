@@ -16,7 +16,7 @@ module RedmineKitAws
         'AWS_LAMBDA_FUNCTION_VERSION' => '$LATEST',
         'AWS_LAMBDA_FUNCTION_MEMORY_SIZE' => '2048',
         'AWS_REGION' => 'ap-northeast-1',
-        'REDMINE_IMAGE' => "111122223333.dkr.ecr.ap-northeast-1.amazonaws.com/redmine@sha256:#{'0f1e2d3c' * 8}"
+        'REDMINE_LAMBDA_IMAGE' => "111122223333.dkr.ecr.ap-northeast-1.amazonaws.com/redmine@sha256:#{'0f1e2d3c' * 8}"
       }.freeze
 
       def setup

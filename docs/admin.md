@@ -12,7 +12,7 @@ The plugin adds two sections to the "Status" tab of Redmine Kit AWS (Administrat
 
 | Item | Contents | Source |
 | --- | --- | --- |
-| Lambda function | Function name, role (`REDMINE_ROLE`), version, memory, Region, image URI. "-" for a value that is not set | Lambda environment variables (`AWS_LAMBDA_FUNCTION_NAME`, etc.), and `REDMINE_IMAGE`: the function's environment variable that the deployment sets to the URI of the function's image by digest (`<account>.dkr.ecr.<Region>.amazonaws.com/<repository>@sha256:<digest>`; Serverless sets it from its `ImageUri` parameter) |
+| Lambda function | Function name, role (`REDMINE_ROLE`), version, memory, Region, image URI. "-" for a value that is not set | Lambda environment variables (`AWS_LAMBDA_FUNCTION_NAME`, etc.), and `REDMINE_LAMBDA_IMAGE`: the function's environment variable that the deployment sets to the URI of the function's image by digest (`<account>.dkr.ecr.<Region>.amazonaws.com/<repository>@sha256:<digest>`; Serverless sets it from its `ImageUri` parameter) |
 | Read-only settings | The settings fixed to disabled in "Redmine settings that cannot work on Lambda" below and their current values (Yes/No). "No data to display" outside Lambda | Values set by the plugin |
 
 ## Redmine settings that cannot work on Lambda

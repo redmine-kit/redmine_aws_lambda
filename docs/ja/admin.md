@@ -14,7 +14,7 @@ Redmine Kit AWS Lambda が Redmine の管理画面に表示するもの (「ス�
 
 | 項目 | 内容 | 取得元 |
 | --- | --- | --- |
-| Lambda 関数 | 関数名、役割 (`REDMINE_ROLE`)、バージョン、メモリ、リージョン、イメージ URI。設定されていない値は「-」 | Lambda の環境変数 (`AWS_LAMBDA_FUNCTION_NAME` など)。`REDMINE_IMAGE` は、デプロイが関数の環境変数に設定する、関数のイメージの digest 付きの URI (`<アカウント>.dkr.ecr.<リージョン>.amazonaws.com/<リポジトリ>@sha256:<digest>`。Serverless はパラメーター `ImageUri` から設定する) |
+| Lambda 関数 | 関数名、役割 (`REDMINE_ROLE`)、バージョン、メモリ、リージョン、イメージ URI。設定されていない値は「-」 | Lambda の環境変数 (`AWS_LAMBDA_FUNCTION_NAME` など)。`REDMINE_LAMBDA_IMAGE` は、デプロイが関数の環境変数に設定する、関数のイメージの digest 付きの URI (`<アカウント>.dkr.ecr.<リージョン>.amazonaws.com/<リポジトリ>@sha256:<digest>`。Serverless はパラメーター `ImageUri` から設定する) |
 | 読み取り専用の設定 | 下の「Lambda で使えない Redmine の設定」のうち、無効に固定する設定と、現在の値 (はい/いいえ)。Lambda 以外では「表示するデータがありません」 | プラグインが決めた値 |
 
 <a id="redmine-settings-that-cannot-work-on-lambda"></a>

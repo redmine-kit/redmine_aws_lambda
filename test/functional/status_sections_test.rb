@@ -10,7 +10,7 @@ module RedmineKitAws
 
       tests AwsStatusController
 
-      # REDMINE_IMAGE as the deployment sets it (docs/admin.md#status).
+      # REDMINE_LAMBDA_IMAGE as the deployment sets it (docs/admin.md#status).
       IMAGE = "111122223333.dkr.ecr.ap-northeast-1.amazonaws.com/redmine@sha256:#{'0f1e2d3c' * 8}".freeze
 
       def setup
@@ -59,7 +59,7 @@ module RedmineKitAws
       # The Status tab as a web function of Lambda shows it.
       def open_status_on_lambda
         with_env('REDMINE_ROLE' => 'web', 'AWS_LAMBDA_FUNCTION_NAME' => 'redmine-web',
-                 'AWS_LAMBDA_FUNCTION_MEMORY_SIZE' => '2048', 'REDMINE_IMAGE' => IMAGE) do
+                 'AWS_LAMBDA_FUNCTION_MEMORY_SIZE' => '2048', 'REDMINE_LAMBDA_IMAGE' => IMAGE) do
           get :index
         end
       end

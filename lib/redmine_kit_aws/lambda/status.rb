@@ -12,7 +12,7 @@ module RedmineKitAws
           version: ENV.fetch('AWS_LAMBDA_FUNCTION_VERSION', nil),
           memory: ENV.fetch('AWS_LAMBDA_FUNCTION_MEMORY_SIZE', nil),
           region: ENV.fetch('AWS_REGION', nil),
-          image: ENV.fetch('REDMINE_IMAGE', nil)
+          image: ENV.fetch('REDMINE_LAMBDA_IMAGE', nil)
         }
       end
 
