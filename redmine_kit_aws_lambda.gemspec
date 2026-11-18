@@ -6,7 +6,7 @@
 # Gemfile is not in it: Redmine's Gemfile would load it again.
 Gem::Specification.new do |spec|
   spec.name = 'redmine_kit_aws_lambda'
-  spec.version = File.read(File.join(__dir__, 'lib/redmine_kit_aws/lambda.rb'))[/VERSION = '([^']+)'/, 1]
+  spec.version = File.read(File.join(__dir__, 'lib/redmine_kit/aws/lambda.rb'))[/VERSION = '([^']+)'/, 1]
   spec.summary = 'Runs Redmine on AWS Lambda'
   spec.authors = ['Redmine Kit']
   spec.license = 'GPL-2.0-or-later'

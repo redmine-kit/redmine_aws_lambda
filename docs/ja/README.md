@@ -33,7 +33,7 @@ AWS のためのほかの機能は、別のプラグインです。Lambda 以外
 
 ## コード構成
 
-Rails の初期化より前に必要なもの (`/events` と転送されたホストのミドルウェア、アセットの設定) は、`boot/redmine_kit_aws_lambda.rb` にあります。プラグインは gem でもあるので、Bundler がこのファイルを読み込みます ([setup.md](setup.md#installation))。ほかは Redmine が読み込む `lib/redmine_kit_aws/lambda.rb`、`lib/redmine_kit_aws/lambda/`、`app/` にあり、`init.rb` が有効にして、「ステータス」のタブの項目を追加します。コードは Redmine Kit AWS の名前空間 `RedmineKitAws` の下の `RedmineKitAws::Lambda` で、`boot/` には `RedmineKitAws::Lambda::Boot` があります。
+Rails の初期化より前に必要なもの (`/events` と転送されたホストのミドルウェア、アセットの設定) は、`boot/redmine_kit_aws_lambda.rb` にあります。プラグインは gem でもあるので、Bundler がこのファイルを読み込みます ([setup.md](setup.md#installation))。ほかは Redmine が読み込む `lib/redmine_kit/aws/lambda.rb`、`lib/redmine_kit/aws/lambda/`、`app/` にあり、`init.rb` が有効にして、「ステータス」のタブの項目を追加します。コードは Redmine Kit AWS の名前空間 `RedmineKit::Aws` の下の `RedmineKit::Aws::Lambda` で、`boot/` には `RedmineKit::Aws::Lambda::Boot` があります。
 
 プラグインは自分では AWS の API を呼ばないので、AWS SDK の gem は不要です。データベースのテーブルも追加しないので、実行する migration はありません。差し替えた処理ごとに、Redmine の標準の仕組み (`rake redmine:plugins:test`) でテストを書いています ([setup.md](setup.md#tests))。
 

@@ -50,6 +50,6 @@ fi
     # Bundler loaded the boot file (it ignores a missing one): without it,
     # Lambda would have no /events and forwarded host middlewares.
     abort %(boot/redmine_kit_aws_lambda.rb not loaded) unless \$LOADED_FEATURES.any? { |f| f.end_with?(%(/boot/redmine_kit_aws_lambda.rb)) }
-    abort %(no /events middleware) unless Rails.application.middleware.include?(RedmineKitAws::Lambda::Boot::EventsMiddleware)
-    puts %(redmine_kit_aws_lambda #{plugin.version} from #{dir}: RedmineKitAws::Lambda #{RedmineKitAws::Lambda::VERSION})"
+    abort %(no /events middleware) unless Rails.application.middleware.include?(RedmineKit::Aws::Lambda::Boot::EventsMiddleware)
+    puts %(redmine_kit_aws_lambda #{plugin.version} from #{dir}: RedmineKit::Aws::Lambda #{RedmineKit::Aws::Lambda::VERSION})"
   bin/rails db:drop >/dev/null'
