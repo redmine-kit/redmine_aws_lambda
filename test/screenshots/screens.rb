@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require_relative '../test_helper'
-require File.join(Redmine::Plugin.find(:redmine_aws).directory, 'test/support/redmine_aws/screenshot_case')
+require File.join(Redmine::Plugin.find(:redmine_kit_aws).directory, 'test/support/redmine_kit_aws/screenshot_case')
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     # The screens of docs/admin.md, on a function as Lambda sets it up (the
     # names and the image are examples).

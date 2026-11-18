@@ -8,7 +8,7 @@
 
 | アクション | リソース | 理由 |
 | --- | --- | --- |
-| なし | — | 「ステータス」のタブと接続テストは [Redmine AWS](https://redmine-kit.github.io/redmine_aws/ja/iam.html) のもの。S3、SES、SQS の確認は、それぞれのプラグインの IAM 権限のページにある権限を使う |
+| なし | — | 「ステータス」のタブと接続テストは [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/ja/iam.html) のもの。S3、SES、SQS の確認は、それぞれのプラグインの IAM 権限のページにある権限を使う |
 
 <a id="example-policy"></a>
 

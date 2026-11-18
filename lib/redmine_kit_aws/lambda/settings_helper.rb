@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     # On Lambda, Redmine's settings page shows the settings that Settings fixes
     # as disabled checkboxes with a note. Added to SettingsController with

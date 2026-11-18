@@ -2,7 +2,7 @@
 
 require_relative '../test_helper'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     # Redmine's settings page on Lambda: the settings fixed by Settings are
     # disabled with a note (SettingsHelper), and only the repository types of

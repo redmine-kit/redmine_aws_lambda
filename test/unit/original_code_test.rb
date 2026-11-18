@@ -3,7 +3,7 @@
 require_relative '../test_helper'
 require 'digest'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     # The plugin replaces the readers that Setting.define_setting writes
     # (Lambda::Settings) and wraps SettingsHelper#setting_check_box

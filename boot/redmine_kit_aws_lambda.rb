@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-# The part of Redmine AWS Lambda that must be in place before Rails finishes
+# The part of Redmine Kit AWS Lambda that must be in place before Rails finishes
 # initializing: the /events and forwarded host middlewares and the asset
 # setting. Bundler loads this file (the plugin is also a gem); init.rb, which
 # Redmine runs later, does the rest. It is outside lib/, which Redmine
-# autoloads. It defines only RedmineAws::Lambda::Boot: the modules around it
-# are empty here, and lib/redmine_aws.rb and lib/redmine_aws/lambda.rb, which
+# autoloads. It defines only RedmineKitAws::Lambda::Boot: the modules around it
+# are empty here, and lib/redmine_kit_aws.rb and lib/redmine_kit_aws/lambda.rb, which
 # the code loader then skips, are loaded by the init.rb files. The module
-# names of redmine_aws come first: with RedmineAws defined, the code loader
-# names the files under lib/redmine_aws/ while it sets up.
-require 'redmine_aws/inflections'
+# names of redmine_kit_aws come first: with RedmineKitAws defined, the code loader
+# names the files under lib/redmine_kit_aws/ while it sets up.
+require 'redmine_kit_aws/inflections'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     module Boot
       # Answers Lambda Web Adapter's /events with 204 before anything else runs,

@@ -2,5 +2,5 @@
 # (https://github.com/redmine-kit/redmine_help, docs/extending.md).
 sections:
   - id: aws-lambda
-    title: Redmine AWS Lambda
+    title: Redmine Kit AWS Lambda
     topics: [aws-lambda/lambda]

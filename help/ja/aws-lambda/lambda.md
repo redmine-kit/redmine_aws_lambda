@@ -4,4 +4,4 @@ AWS Lambda では、「管理」›「AWS」›「ステータス」に、ペー
 
 Lambda で固定している Redmine の設定 (「コミットを自動取得する」「リポジトリ管理用のWebサービスを有効にする」「受信メール用のWebサービスを有効にする」) は、Lambda では動かないため、「管理」›「設定」で無効になり、「この環境では設定できません」と表示されます。リポジトリの種類は Subversion と Git だけを表示します。
 
-詳しくは [Redmine AWS Lambda の管理画面](https://redmine-kit.github.io/redmine_aws_lambda/ja/admin.html) を参照してください。
+詳しくは [Redmine Kit AWS Lambda の管理画面](https://redmine-kit.github.io/redmine_aws_lambda/ja/admin.html) を参照してください。

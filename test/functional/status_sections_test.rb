@@ -2,9 +2,9 @@
 
 require_relative '../test_helper'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
-    # The sections this plugin adds to the Status tab of redmine_aws.
+    # The sections this plugin adds to the Status tab of redmine_kit_aws.
     class StatusSectionsTest < Redmine::ControllerTest
       include Lambda::TestHelper
 
@@ -26,7 +26,7 @@ module RedmineAws
         assert_select 'table.list.values tr', text: /Role\s*web\s*REDMINE_ROLE/
         assert_select 'table.list.values tr', text: /Memory\s*2,048 MB/
         assert_select 'table.list.values tr', text: /Image URI\s*#{Regexp.escape(IMAGE)}/
-        assert_select 'table.list.values td.name', text: 'Redmine AWS Lambda'
+        assert_select 'table.list.values td.name', text: 'Redmine Kit AWS Lambda'
       end
 
       def test_the_fixed_settings_on_lambda

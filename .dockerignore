@@ -1,7 +1,7 @@
 *
 !init.rb
 !Gemfile
-!redmine_aws_lambda.gemspec
+!redmine_kit_aws_lambda.gemspec
 !LICENSE
 !app/
 !boot/

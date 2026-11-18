@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module RedmineAws
+module RedmineKitAws
   # Running Redmine on AWS Lambda (docs/README.md). The features are on only
   # when REDMINE_ROLE is set (web, worker or task), as on Lambda. What must be
-  # in place before Rails initializes is in boot/redmine_aws_lambda.rb.
+  # in place before Rails initializes is in boot/redmine_kit_aws_lambda.rb.
   module Lambda
     VERSION = '0.1.0'
 

@@ -1,12 +1,12 @@
 # Administration pages
 
-This page describes what Redmine AWS Lambda shows in Redmine's administration: the Lambda function and the read-only settings on the "Status" tab, and the Redmine settings that it fixes on Lambda. The "AWS" item of the administration menu and the "Status" tab belong to [Redmine AWS](https://redmine-kit.github.io/redmine_aws/admin.html), which describes the menu, the other values of the tab and the connection test.
+This page describes what Redmine Kit AWS Lambda shows in Redmine's administration: the Lambda function and the read-only settings on the "Status" tab, and the Redmine settings that it fixes on Lambda. The "AWS" item of the administration menu and the "Status" tab belong to [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/admin.html), which describes the menu, the other values of the tab and the connection test.
 
 The specifications in this page were checked against official information and the Redmine 7.0.3 source as of 2026-11-08. Sources are in [sources.md](https://redmine-kit.github.io/serverless/sources.html).
 
 ## Status
 
-The plugin adds two sections to the "Status" tab of Redmine AWS (Administration › AWS › Status): the Lambda function before the versions, and the read-only settings after them. Only administrators can open the tab, and it shows no secrets.
+The plugin adds two sections to the "Status" tab of Redmine Kit AWS (Administration › AWS › Status): the Lambda function before the versions, and the read-only settings after them. Only administrators can open the tab, and it shows no secrets.
 
 ![The Status tab on Lambda after Test: the Lambda function, the versions, the read-only settings and the results of the connection test](./images/status.png)
 
@@ -26,7 +26,7 @@ Standard Redmine settings that do not work on Lambda, or that this design does n
 | Enabled SCM (`enabled_scm`) | Administration › Settings › Repositories | Only Subversion and Git are listed and can be enabled; the other types are not listed. Projects can have Subversion and Git repositories | The image of Serverless has only the Subversion and Git clients. A Subversion repository can be remote (`https://`, `svn://`), and Redmine reads it with `svn` without keeping a copy. Redmine reads a Git repository from a local bare repository with `git`; on Lambda only `/tmp` is writable, and a repository under `/tmp` is lost when the execution environment stops. Where to keep Git repositories has not been decided ([Serverless lambda.md](https://redmine-kit.github.io/serverless/lambda.html#repositories)) |
 | Fetch commits automatically (`autofetch_changesets`) | Same as above | Fixed to disabled | With it, Redmine fetches new commits while it shows the repository page, so the page waits for the client, and a first fetch of a large repository may not finish within the web function's timeout (60 seconds). Commits are fetched with `rake redmine:fetch_changesets` on `redmine-task` instead ([Serverless lambda.md](https://redmine-kit.github.io/serverless/lambda.html#repositories)) |
 | Enable WS for repository management (`sys_api_enabled`) | Same as above | Fixed to disabled | This web service is for `reposman.rb`, which creates repositories on the server's disk, and for hooks that ask Redmine to fetch commits. Lambda has no disk to keep repositories on, and fetching is done by the task above, so it is not left open |
-| Enable WS for incoming emails (`mail_handler_api_enabled`) | Administration › Settings › Incoming emails | Fixed to disabled | Email is received by SES and imported by `redmine-task` ([mail.md](https://redmine-kit.github.io/serverless/mail.html#receiving); [Redmine AWS SES](https://redmine-kit.github.io/redmine_aws_ses/)). A web service that lets anyone push email in over HTTP is not left open |
+| Enable WS for incoming emails (`mail_handler_api_enabled`) | Administration › Settings › Incoming emails | Fixed to disabled | Email is received by SES and imported by `redmine-task` ([mail.md](https://redmine-kit.github.io/serverless/mail.html#receiving); [Redmine Kit AWS SES](https://redmine-kit.github.io/redmine_aws_ses/)). A web service that lets anyone push email in over HTTP is not left open |
 
 | Item | Details |
 | --- | --- |

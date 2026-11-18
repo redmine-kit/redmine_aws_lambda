@@ -1,6 +1,6 @@
-# Redmine AWS Lambda
+# Redmine Kit AWS Lambda
 
-Redmine AWS Lambda (`redmine_aws_lambda`) は、Redmine を AWS Lambda で動かすための Redmine のプラグインです。[Serverless](https://redmine-kit.github.io/serverless/ja/architecture.html) が、Lambda 用のイメージにインストールして使います。「AWS」の管理メニューと「ステータス」のタブを持つ [Redmine AWS](https://redmine-kit.github.io/redmine_aws/ja/) を必要とします。Redmine 本体のファイルは書き換えず、Redmine の標準の拡張の仕組みだけで作ります。今は開発の初期です。
+Redmine Kit AWS Lambda (`redmine_kit_aws_lambda`) は、Redmine を AWS Lambda で動かすための Redmine のプラグインです。[Serverless](https://redmine-kit.github.io/serverless/ja/architecture.html) が、Lambda 用のイメージにインストールして使います。「AWS」の管理メニューと「ステータス」のタブを持つ [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/ja/) を必要とします。Redmine 本体のファイルは書き換えず、Redmine の標準の拡張の仕組みだけで作ります。今は開発の初期です。
 
 - [導入](setup.md): 動作環境、インストール、設定、AWS リソース、ネットワーク、テスト
 - [IAM 権限](iam.md): 権限、ポリシーの例、リソースベースのポリシー
@@ -16,24 +16,24 @@ Redmine の標準の動きをできるだけ保ち、自前で書くのは、Lam
 | 機能 | 内容 | 有効にする条件 | 資料 |
 | --- | --- | --- | --- |
 | Lambda での実行 | Lambda Web Adapter の `/events` に 204 を返す Rack のミドルウェア、CloudFront の `X-Forwarded-Host` を `Host` にする Rack のミドルウェア、アセットの自動の書き出しを止める設定、Lambda で使えない Redmine の設定を無効に固定して画面に表示する | `REDMINE_ROLE` がある | [admin.md](admin.md#redmine-settings-that-cannot-work-on-lambda) |
-| 管理画面 | Redmine AWS の「ステータス」のタブの Lambda 関数と読み取り専用の設定 | システム管理者 | [admin.md](admin.md) |
+| 管理画面 | Redmine Kit AWS の「ステータス」のタブの Lambda 関数と読み取り専用の設定 | システム管理者 | [admin.md](admin.md) |
 
 AWS のためのほかの機能は、別のプラグインです。Lambda 以外でも動きます。
 
 | プラグイン | 内容 |
 | --- | --- |
-| [Redmine AWS S3](https://redmine-kit.github.io/redmine_aws_s3/ja/) | S3 の添付ファイル。署名付き URL で CloudFront を通すアップロードとダウンロード、`/tmp` のキャッシュ |
-| [Redmine AWS SES](https://redmine-kit.github.io/redmine_aws_ses/ja/) | SES でのメール。エラーの種類別の再送信、受信と取り込み、プロジェクト別のアドレス |
-| [Redmine AWS SQS](https://redmine-kit.github.io/redmine_aws_sqs/ja/) | SQS でのジョブ。`aws-activejob-sqs` の設定、ジョブの失敗の記録、再送信 |
-| [Redmine AWS SSM](https://redmine-kit.github.io/redmine_aws_ssm/ja/) | SSM Parameter Store の設定とシークレット。Rails が起動する前に読み込む |
+| [Redmine Kit AWS S3](https://redmine-kit.github.io/redmine_aws_s3/ja/) | S3 の添付ファイル。署名付き URL で CloudFront を通すアップロードとダウンロード、`/tmp` のキャッシュ |
+| [Redmine Kit AWS SES](https://redmine-kit.github.io/redmine_aws_ses/ja/) | SES でのメール。エラーの種類別の再送信、受信と取り込み、プロジェクト別のアドレス |
+| [Redmine Kit AWS SQS](https://redmine-kit.github.io/redmine_aws_sqs/ja/) | SQS でのジョブ。`aws-activejob-sqs` の設定、ジョブの失敗の記録、再送信 |
+| [Redmine Kit AWS SSM](https://redmine-kit.github.io/redmine_aws_ssm/ja/) | SSM Parameter Store の設定とシークレット。Rails が起動する前に読み込む |
 
-これらのプラグインは、Redmine AWS が持つ管理メニューの 1 つの項目「AWS」の下に、管理画面を 1 つのページのタブとして置きます ([Redmine AWS の admin.md](https://redmine-kit.github.io/redmine_aws/ja/admin.html#the-aws-menu))。それぞれの確認は、その接続テストに加わります。
+これらのプラグインは、Redmine Kit AWS が持つ管理メニューの 1 つの項目「AWS」の下に、管理画面を 1 つのページのタブとして置きます ([Redmine Kit AWS の admin.md](https://redmine-kit.github.io/redmine_aws/ja/admin.html#the-aws-menu))。それぞれの確認は、その接続テストに加わります。
 
 <a id="code-layout"></a>
 
 ## コード構成
 
-Rails の初期化より前に必要なもの (`/events` と転送されたホストのミドルウェア、アセットの設定) は、`boot/redmine_aws_lambda.rb` にあります。プラグインは gem でもあるので、Bundler がこのファイルを読み込みます ([setup.md](setup.md#installation))。ほかは Redmine が読み込む `lib/redmine_aws/lambda.rb`、`lib/redmine_aws/lambda/`、`app/` にあり、`init.rb` が有効にして、「ステータス」のタブの項目を追加します。コードは Redmine AWS の名前空間 `RedmineAws` の下の `RedmineAws::Lambda` で、`boot/` には `RedmineAws::Lambda::Boot` があります。
+Rails の初期化より前に必要なもの (`/events` と転送されたホストのミドルウェア、アセットの設定) は、`boot/redmine_kit_aws_lambda.rb` にあります。プラグインは gem でもあるので、Bundler がこのファイルを読み込みます ([setup.md](setup.md#installation))。ほかは Redmine が読み込む `lib/redmine_kit_aws/lambda.rb`、`lib/redmine_kit_aws/lambda/`、`app/` にあり、`init.rb` が有効にして、「ステータス」のタブの項目を追加します。コードは Redmine Kit AWS の名前空間 `RedmineKitAws` の下の `RedmineKitAws::Lambda` で、`boot/` には `RedmineKitAws::Lambda::Boot` があります。
 
 プラグインは自分では AWS の API を呼ばないので、AWS SDK の gem は不要です。データベースのテーブルも追加しないので、実行する migration はありません。差し替えた処理ごとに、Redmine の標準の仕組み (`rake redmine:plugins:test`) でテストを書いています ([setup.md](setup.md#tests))。
 
@@ -61,8 +61,8 @@ Lambda 上 (`REDMINE_ROLE` があるとき) では、プラグインが Redmine 
 | アセットの確認 | `REDMINE_ROLE` のある新しいプロセスで `false`。ロールがなければ変わらない |
 | 固定する設定 | Lambda では読み出しが固定の値を返し、保存しても変わらない。ロールがなければ Redmine の標準のまま。設定の画面は、それらのチェックボックスを押せない状態にして注記を添え、Subversion と Git だけを表示する。ほかのチェックボックスは Redmine の表示のまま。ほかのリポジトリの種類は Lambda 上でだけ Redmine の一覧から外す |
 | 差し替えたコード | Redmine の `Setting.define_setting` と `SettingsHelper#setting_check_box` の SHA-256 を比べ、Redmine のバージョンアップで変わったら気づけるようにする |
-| ステータスのタブ | Redmine AWS のタブの Lambda 関数と読み取り専用の設定。タブの項目の間の順序。ロールがなければデータなし |
-| コードの読み込み | 新しいプロセスで確認する。`zeitwerk:check` が通る。boot のファイルを読み込んだ状態で、Redmine AWS とこのプラグインが起動する |
+| ステータスのタブ | Redmine Kit AWS のタブの Lambda 関数と読み取り専用の設定。タブの項目の間の順序。ロールがなければデータなし |
+| コードの読み込み | 新しいプロセスで確認する。`zeitwerk:check` が通る。boot のファイルを読み込んだ状態で、Redmine Kit AWS とこのプラグインが起動する |
 
 <a id="sponsors"></a>
 
@@ -74,4 +74,4 @@ Lambda 上 (`REDMINE_ROLE` があるとき) では、プラグインが Redmine 
 
 ## ライセンス
 
-Redmine AWS Lambda は、GNU General Public License バージョン 2 またはそれ以降のバージョンで公開しています。[LICENSE](../../LICENSE) を参照してください。Redmine の非公式のプラグインです。
+Redmine Kit AWS Lambda は、GNU General Public License バージョン 2 またはそれ以降のバージョンで公開しています。[LICENSE](../../LICENSE) を参照してください。Redmine の非公式のプラグインです。

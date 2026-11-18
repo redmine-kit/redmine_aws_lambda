@@ -1,6 +1,6 @@
-# Redmine AWS Lambda
+# Redmine Kit AWS Lambda
 
-Redmine AWS Lambda (`redmine_aws_lambda`) is a Redmine plugin for running Redmine on AWS Lambda. [Serverless](https://redmine-kit.github.io/serverless/architecture.html) installs it in the Lambda image. It requires [Redmine AWS](https://redmine-kit.github.io/redmine_aws/), which holds the "AWS" administration menu and the "Status" tab. It does not modify Redmine's own files and uses only Redmine's standard extension mechanisms. The plugin is in early development.
+Redmine Kit AWS Lambda (`redmine_kit_aws_lambda`) is a Redmine plugin for running Redmine on AWS Lambda. [Serverless](https://redmine-kit.github.io/serverless/architecture.html) installs it in the Lambda image. It requires [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/), which holds the "AWS" administration menu and the "Status" tab. It does not modify Redmine's own files and uses only Redmine's standard extension mechanisms. The plugin is in early development.
 
 - [Setup](setup.md): requirements, installation, configuration, AWS resources, network, tests
 - [IAM permissions](iam.md): permissions, example policy, resource-based policies
@@ -14,22 +14,22 @@ The plugin keeps Redmine's standard behavior as far as possible and implements o
 | Feature | Contents | Enabled when | Page |
 | --- | --- | --- | --- |
 | Running on Lambda | A Rack middleware that returns 204 for Lambda Web Adapter's `/events`, a Rack middleware that makes CloudFront's `X-Forwarded-Host` the `Host`, a setting that stops automatic asset compilation, Redmine settings that cannot work on Lambda fixed to disabled and shown on screen | `REDMINE_ROLE` is set | [admin.md](admin.md#redmine-settings-that-cannot-work-on-lambda) |
-| Administration pages | The Lambda function and the read-only settings on the "Status" tab of Redmine AWS | Administrators | [admin.md](admin.md) |
+| Administration pages | The Lambda function and the read-only settings on the "Status" tab of Redmine Kit AWS | Administrators | [admin.md](admin.md) |
 
 The other features for AWS are separate plugins, which also work outside Lambda:
 
 | Plugin | Contents |
 | --- | --- |
-| [Redmine AWS S3](https://redmine-kit.github.io/redmine_aws_s3/) | Attachments in S3: uploads and downloads through CloudFront with signed URLs, the `/tmp` cache |
-| [Redmine AWS SES](https://redmine-kit.github.io/redmine_aws_ses/) | Email through SES: retries of sending by error type, receiving and importing, addresses per project |
-| [Redmine AWS SQS](https://redmine-kit.github.io/redmine_aws_sqs/) | Jobs on SQS: the settings of `aws-activejob-sqs`, job failure records, resending |
-| [Redmine AWS SSM](https://redmine-kit.github.io/redmine_aws_ssm/) | Settings and secrets from SSM Parameter Store, read before Rails starts |
+| [Redmine Kit AWS S3](https://redmine-kit.github.io/redmine_aws_s3/) | Attachments in S3: uploads and downloads through CloudFront with signed URLs, the `/tmp` cache |
+| [Redmine Kit AWS SES](https://redmine-kit.github.io/redmine_aws_ses/) | Email through SES: retries of sending by error type, receiving and importing, addresses per project |
+| [Redmine Kit AWS SQS](https://redmine-kit.github.io/redmine_aws_sqs/) | Jobs on SQS: the settings of `aws-activejob-sqs`, job failure records, resending |
+| [Redmine Kit AWS SSM](https://redmine-kit.github.io/redmine_aws_ssm/) | Settings and secrets from SSM Parameter Store, read before Rails starts |
 
-They put their administration pages under the one "AWS" item of Redmine's administration menu that Redmine AWS holds, as tabs of one page ([Redmine AWS admin.md](https://redmine-kit.github.io/redmine_aws/admin.html#the-aws-menu)), and their checks join its connection test.
+They put their administration pages under the one "AWS" item of Redmine's administration menu that Redmine Kit AWS holds, as tabs of one page ([Redmine Kit AWS admin.md](https://redmine-kit.github.io/redmine_aws/admin.html#the-aws-menu)), and their checks join its connection test.
 
 ## Code layout
 
-What must be in place before Rails initializes (the `/events` and forwarded host middlewares and the asset setting) is in `boot/redmine_aws_lambda.rb`. Because the plugin is also a gem, Bundler loads this file ([setup.md](setup.md#installation)). The rest is in `lib/redmine_aws/lambda.rb`, `lib/redmine_aws/lambda/` and `app/`, which Redmine loads, and `init.rb` turns it on and adds the sections of the "Status" tab. The code is under the `RedmineAws` namespace of Redmine AWS: `RedmineAws::Lambda`, with `RedmineAws::Lambda::Boot` in `boot/`.
+What must be in place before Rails initializes (the `/events` and forwarded host middlewares and the asset setting) is in `boot/redmine_kit_aws_lambda.rb`. Because the plugin is also a gem, Bundler loads this file ([setup.md](setup.md#installation)). The rest is in `lib/redmine_kit_aws/lambda.rb`, `lib/redmine_kit_aws/lambda/` and `app/`, which Redmine loads, and `init.rb` turns it on and adds the sections of the "Status" tab. The code is under the `RedmineKitAws` namespace of Redmine Kit AWS: `RedmineKitAws::Lambda`, with `RedmineKitAws::Lambda::Boot` in `boot/`.
 
 The plugin calls no AWS API itself, so it needs no AWS SDK gem. It adds no database tables, so there are no migrations to run. Each piece of replaced code has tests written with Redmine's standard mechanism (`rake redmine:plugins:test`) ([setup.md](setup.md#tests)).
 
@@ -53,8 +53,8 @@ On Lambda (when `REDMINE_ROLE` is set), the plugin adapts Redmine as follows. [S
 | Asset detection | `false` in a new process with `REDMINE_ROLE`, unchanged without it |
 | Fixed settings | The readers return the fixed values on Lambda, saving does not change them, Redmine's standard behavior without the role; the settings page shows their checkboxes disabled with the note and lists only Subversion and Git, other checkboxes stay as Redmine shows them; the other repository types are removed from Redmine's list on Lambda only |
 | The replaced code | The SHA-256 of `Setting.define_setting` and `SettingsHelper#setting_check_box` in Redmine is compared, so that an upgrade of Redmine that changes them is noticed |
-| Status tab | The Lambda function and the read-only settings on Redmine AWS's tab, in order between its sections; no data without the role |
-| Code loading | In new processes: `zeitwerk:check` passes, and Redmine AWS and this plugin start with the boot file loaded |
+| Status tab | The Lambda function and the read-only settings on Redmine Kit AWS's tab, in order between its sections; no data without the role |
+| Code loading | In new processes: `zeitwerk:check` passes, and Redmine Kit AWS and this plugin start with the boot file loaded |
 
 ## Sponsors
 
@@ -62,4 +62,4 @@ On Lambda (when `REDMINE_ROLE` is set), the plugin adapts Redmine as follows. [S
 
 ## License
 
-Redmine AWS Lambda is released under the GNU General Public License, version 2 or (at your option) any later version. See [LICENSE](../LICENSE). An unofficial Redmine plugin.
+Redmine Kit AWS Lambda is released under the GNU General Public License, version 2 or (at your option) any later version. See [LICENSE](../LICENSE). An unofficial Redmine plugin.

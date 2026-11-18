@@ -6,7 +6,7 @@ The plugin itself calls no AWS API, so it needs no permissions of its own. Lambd
 
 | Action | Resource | Why |
 | --- | --- | --- |
-| None | — | The "Status" tab and its connection test belong to [Redmine AWS](https://redmine-kit.github.io/redmine_aws/iam.html); the checks of S3, SES and SQS use the permissions on the IAM pages of those plugins |
+| None | — | The "Status" tab and its connection test belong to [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/iam.html); the checks of S3, SES and SQS use the permissions on the IAM pages of those plugins |
 
 ## Example policy
 

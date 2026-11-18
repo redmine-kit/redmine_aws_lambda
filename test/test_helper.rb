@@ -19,12 +19,12 @@ if ENV['PLUGIN_COVERAGE'] && !(defined?(SimpleCov) && SimpleCov.running)
 end
 
 require File.expand_path('../../../test/test_helper', __dir__)
-require File.join(Redmine::Plugin.find(:redmine_aws).directory, 'test/support/redmine_aws/test_helper')
+require File.join(Redmine::Plugin.find(:redmine_kit_aws).directory, 'test/support/redmine_kit_aws/test_helper')
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     module TestHelper
-      include RedmineAws::TestHelper
+      include RedmineKitAws::TestHelper
 
       # Runs the block as on Lambda (REDMINE_ROLE set), or without the role.
       def with_role(role, &)

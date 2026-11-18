@@ -1,10 +1,10 @@
-# Redmine AWS Lambda
+# Redmine Kit AWS Lambda
 
 [![CI](https://img.shields.io/github/actions/workflow/status/redmine-kit/redmine_aws_lambda/ci.yml?branch=main&label=CI)](https://github.com/redmine-kit/redmine_aws_lambda/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/redmine-kit/redmine_aws_lambda?label=Coverage)](https://codecov.io/gh/redmine-kit/redmine_aws_lambda)
 [![License](https://img.shields.io/github/license/redmine-kit/redmine_aws_lambda?label=License)](LICENSE)
 
-Redmine を AWS Lambda で動かすための Redmine のプラグインです。Lambda Web Adapter の `/events`、CloudFront から転送されたホスト、Lambda で使えない Redmine の設定の固定と画面での表示、「ステータス」のタブの Lambda 関数を持ちます。[Serverless](https://github.com/redmine-kit/serverless) のプラグインです。「AWS」の管理メニューを持つ [Redmine AWS](https://github.com/redmine-kit/redmine_aws) を必要とします。添付ファイル、メール、ジョブ、Parameter Store の設定は、別のプラグインの [Redmine AWS S3](https://github.com/redmine-kit/redmine_aws_s3)、[Redmine AWS SES](https://github.com/redmine-kit/redmine_aws_ses)、[Redmine AWS SQS](https://github.com/redmine-kit/redmine_aws_sqs)、[Redmine AWS SSM](https://github.com/redmine-kit/redmine_aws_ssm) です。
+Redmine を AWS Lambda で動かすための Redmine のプラグインです。Lambda Web Adapter の `/events`、CloudFront から転送されたホスト、Lambda で使えない Redmine の設定の固定と画面での表示、「ステータス」のタブの Lambda 関数を持ちます。[Serverless](https://github.com/redmine-kit/serverless) のプラグインです。「AWS」の管理メニューを持つ [Redmine Kit AWS](https://github.com/redmine-kit/redmine_aws) を必要とします。添付ファイル、メール、ジョブ、Parameter Store の設定は、別のプラグインの [Redmine Kit AWS S3](https://github.com/redmine-kit/redmine_aws_s3)、[Redmine Kit AWS SES](https://github.com/redmine-kit/redmine_aws_ses)、[Redmine Kit AWS SQS](https://github.com/redmine-kit/redmine_aws_sqs)、[Redmine Kit AWS SSM](https://github.com/redmine-kit/redmine_aws_ssm) です。
 
 [English](README.md)
 
@@ -32,4 +32,4 @@ Redmine を AWS Lambda で動かすための Redmine のプラグインです。
 
 ## ライセンス
 
-Redmine AWS Lambda は、GNU General Public License バージョン 2 またはそれ以降のバージョンで公開しています。[LICENSE](LICENSE) を参照してください。Redmine の非公式のプラグインです。
+Redmine Kit AWS Lambda は、GNU General Public License バージョン 2 またはそれ以降のバージョンで公開しています。[LICENSE](LICENSE) を参照してください。Redmine の非公式のプラグインです。

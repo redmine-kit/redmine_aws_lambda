@@ -2,7 +2,7 @@
 # Starts PostgreSQL 16 for the tests, or stops it with --down.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-compose=(docker compose -f test/compose.yml -p redmine-aws-lambda-test)
+compose=(docker compose -f test/compose.yml -p redmine-kit-aws-lambda-test)
 if [[ "${1:-}" == "--down" ]]; then
   "${compose[@]}" down -v
   exit 0

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     # Redmine settings that cannot work on Lambda, fixed while REDMINE_ROLE is
     # set (docs/admin.md#redmine-settings-that-cannot-work-on-lambda). Redmine

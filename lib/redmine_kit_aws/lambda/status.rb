@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
-    # What this plugin adds to the Status tab of redmine_aws
+    # What this plugin adds to the Status tab of redmine_kit_aws
     # (docs/admin.md#status). No secret values: only names.
     module Status
       def self.function

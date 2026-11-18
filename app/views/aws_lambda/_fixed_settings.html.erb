@@ -1,7 +1,7 @@
 <h3><%= l(:label_aws_lambda_fixed_settings) %></h3>
-<% if RedmineAws::Lambda.lambda? %>
+<% if RedmineKitAws::Lambda.lambda? %>
 <%= render partial: 'aws_admin/values', locals: {
-      rows: RedmineAws::Lambda::Status.fixed_settings.map { |name, value|
+      rows: RedmineKitAws::Lambda::Status.fixed_settings.map { |name, value|
         { name: l(:"setting_#{name}"), value: format_object(value.to_s == '1'), note: name }
       }
     } %>

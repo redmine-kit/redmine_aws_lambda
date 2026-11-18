@@ -1,6 +1,6 @@
 # 管理画面
 
-Redmine AWS Lambda が Redmine の管理画面に表示するもの (「ステータス」のタブの Lambda 関数と読み取り専用の設定) と、Lambda で固定する Redmine の設定です。管理メニューの「AWS」の項目と「ステータス」のタブは [Redmine AWS](https://redmine-kit.github.io/redmine_aws/ja/admin.html) のもので、メニュー、タブのほかの値、接続テストはそちらで説明しています。
+Redmine Kit AWS Lambda が Redmine の管理画面に表示するもの (「ステータス」のタブの Lambda 関数と読み取り専用の設定) と、Lambda で固定する Redmine の設定です。管理メニューの「AWS」の項目と「ステータス」のタブは [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/ja/admin.html) のもので、メニュー、タブのほかの値、接続テストはそちらで説明しています。
 
 この資料の仕様は、2026-11-08 時点の公式の情報と、Redmine 7.0.3 のソースで確認したものです。出典は [sources.md](https://redmine-kit.github.io/serverless/ja/sources.html) にあります。
 
@@ -8,7 +8,7 @@ Redmine AWS Lambda が Redmine の管理画面に表示するもの (「ステ�
 
 ## ステータス
 
-プラグインは、Redmine AWS の「ステータス」のタブ (「管理」›「AWS」›「ステータス」) に 2 つの項目を追加します。バージョンの前に Lambda 関数、後に読み取り専用の設定です。タブを開けるのはシステム管理者だけで、シークレットは表示しません。
+プラグインは、Redmine Kit AWS の「ステータス」のタブ (「管理」›「AWS」›「ステータス」) に 2 つの項目を追加します。バージョンの前に Lambda 関数、後に読み取り専用の設定です。タブを開けるのはシステム管理者だけで、シークレットは表示しません。
 
 ![Lambda で「テスト」を押したあとの「ステータス」のタブ。Lambda 関数、バージョン、読み取り専用の設定、接続テストの結果](./images/status.png)
 
@@ -30,7 +30,7 @@ Redmine の標準の設定のうち、Lambda 上では動かないものや、�
 | 使用するバージョン管理システム (`enabled_scm`) | 「管理」›「設定」›「リポジトリ」 | Subversion と Git だけを表示し、有効にできる。ほかの種類は表示しない。プロジェクトには Subversion と Git のリポジトリを作成できる | Serverless のイメージには、Subversion と Git のクライアントだけがある。Subversion のリポジトリはリモート (`https://`、`svn://`) でもよく、Redmine はコピーを持たずに `svn` で読む。Git のリポジトリは、Redmine がローカルのベアリポジトリを `git` で読む。Lambda で書き込めるのは `/tmp` だけで、`/tmp` に置いたリポジトリは実行環境が停止すると失われる。Git のリポジトリの保存先は未決定 ([Serverless の lambda.md](https://redmine-kit.github.io/serverless/ja/lambda.html#repositories)) |
 | コミットを自動取得する (`autofetch_changesets`) | 同上 | 無効に固定する | 有効にすると、Redmine はリポジトリの画面を表示するときに新しいコミットを取得するので、画面がクライアントの処理を待つ。大きなリポジトリの最初の取得は、web の関数のタイムアウト (60 秒) までに終わらないことがある。コミットは代わりに `redmine-task` の `rake redmine:fetch_changesets` で取得する ([Serverless の lambda.md](https://redmine-kit.github.io/serverless/ja/lambda.html#repositories)) |
 | リポジトリ管理用のWebサービスを有効にする (`sys_api_enabled`) | 同上 | 無効に固定する | この Web サービスは、サーバーのディスクにリポジトリを作成する `reposman.rb` と、Redmine にコミットの取得を依頼するフックのためのもの。Lambda にはリポジトリを置くディスクがなく、取得は上のタスクで行うので、開けない |
-| 受信メール用のWebサービスを有効にする (`mail_handler_api_enabled`) | 「管理」›「設定」›「受信メール」 | 無効に固定する | メールは SES で受けて `redmine-task` が取り込む ([mail.md](https://redmine-kit.github.io/serverless/ja/mail.html#receiving)、[Redmine AWS SES](https://redmine-kit.github.io/redmine_aws_ses/ja/))。外から HTTP でメールを送り込める Web サービスを開けない |
+| 受信メール用のWebサービスを有効にする (`mail_handler_api_enabled`) | 「管理」›「設定」›「受信メール」 | 無効に固定する | メールは SES で受けて `redmine-task` が取り込む ([mail.md](https://redmine-kit.github.io/serverless/ja/mail.html#receiving)、[Redmine Kit AWS SES](https://redmine-kit.github.io/redmine_aws_ses/ja/))。外から HTTP でメールを送り込める Web サービスを開けない |
 
 | 項目 | 内容 |
 | --- | --- |

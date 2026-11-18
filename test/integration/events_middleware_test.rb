@@ -2,7 +2,7 @@
 
 require_relative '../test_helper'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     class EventsMiddlewareTest < Redmine::IntegrationTest
       include Lambda::TestHelper

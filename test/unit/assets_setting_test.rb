@@ -6,7 +6,7 @@ require 'open3'
 # Redmine writes changed assets to public/assets after initialization unless
 # config.assets.redmine_detect_update is false. Checked in a new process,
 # because the setting is read once at start-up.
-module RedmineAws
+module RedmineKitAws
   module Lambda
     class AssetsSettingTest < ActiveSupport::TestCase
       def detect_update(role)

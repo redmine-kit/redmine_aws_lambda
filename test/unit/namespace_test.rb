@@ -3,11 +3,11 @@
 require_relative '../test_helper'
 require 'open3'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
-    # The plugin's code is under the RedmineAws namespace of redmine_aws
-    # (lib/redmine_aws/lambda.rb), and its boot file defines
-    # RedmineAws::Lambda::Boot before Redmine's code loader (Zeitwerk) starts,
+    # The plugin's code is under the RedmineKitAws namespace of redmine_kit_aws
+    # (lib/redmine_kit_aws/lambda.rb), and its boot file defines
+    # RedmineKitAws::Lambda::Boot before Redmine's code loader (Zeitwerk) starts,
     # as in the test image. Checked in new processes, as at start-up.
     class NamespaceTest < ActiveSupport::TestCase
       def rails(*)
@@ -21,11 +21,12 @@ module RedmineAws
       end
 
       def test_both_plugins_start_with_the_boot_file_loaded
-        script = 'print RedmineAws::VERSION, " ", RedmineAws::Lambda::VERSION, " ", ' \
-                 'RedmineAws::Admin.status_sections.map(&:name).join(",")'
+        script = 'print RedmineKitAws::VERSION, " ", RedmineKitAws::Lambda::VERSION, " ", ' \
+                 'RedmineKitAws::Admin.status_sections.map(&:name).join(",")'
 
-        assert_equal "#{RedmineAws::VERSION} #{VERSION} lambda_function,versions,loaded_settings,lambda_fixed_settings",
-                     rails('runner', script).lines.last.to_s.strip
+        sections = 'lambda_function,versions,loaded_settings,lambda_fixed_settings'
+
+        assert_equal "#{RedmineKitAws::VERSION} #{VERSION} #{sections}", rails('runner', script).lines.last.to_s.strip
       end
     end
   end

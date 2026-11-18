@@ -2,7 +2,7 @@
 
 require_relative '../test_helper'
 
-module RedmineAws
+module RedmineKitAws
   module Lambda
     # The middleware in front of Rails' host authorization with config.hosts set
     # to the Redmine domain only, as on Lambda (REDMINE_HOST). Requests come as
