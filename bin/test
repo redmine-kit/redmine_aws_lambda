@@ -23,7 +23,7 @@ if [[ "$cli" == docker ]]; then
 else
   # PostgreSQL by its address, and more memory than the 1 GB a container
   # gets by default.
-  network=$name
+  network=$kit_test_network
   opts=(-m 4G -e PARALLEL_WORKERS="${PARALLEL_WORKERS:-2}" -e TEST_DATABASE_HOST="$(container_address "$name-postgres")")
 fi
 # A database of this run's own (test/database.yml), dropped when the tests end.
