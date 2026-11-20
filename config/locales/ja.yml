@@ -1,4 +1,7 @@
 ja:
+  # The plugin's name and description (Administration › Plugins; redmine_kit_ui's docs/plugin-names.md)
+  plugin_name_redmine_kit_aws_lambda: Redmine Kit AWS Lambda
+  plugin_description_redmine_kit_aws_lambda: Redmine を AWS Lambda で実行
   label_aws_lambda_function: Lambda 関数
   label_aws_lambda_fixed_settings: 読み取り専用の設定
   field_aws_lambda_function_name: 関数名
