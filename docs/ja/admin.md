@@ -51,4 +51,4 @@ Redmine の標準の設定のうち、Lambda 上では動かないものや、�
 
 ステータスのタブの項目と設定の画面には、Redmine の機能テストがあります ([testing.md](https://redmine-kit.github.io/serverless/ja/testing.html#administration-pages))。
 
-このページのスクリーンショットは、`bin/screenshots` で撮影します (Docker のヘッドレス Chromium と、Redmine のテストデータ)。画面を変更したら実行します。
+このページのスクリーンショットは、`bin/screenshots` で撮影します (Apple container が動いていれば Apple container、そうでなければ Docker のヘッドレス Chromium と、Redmine のテストデータ)。画面を変更したら実行します。

@@ -43,4 +43,4 @@ The pages call no AWS API of this plugin's own; see [iam.md](iam.md).
 
 The sections of the Status tab and the settings page have Redmine functional tests ([testing.md](https://redmine-kit.github.io/serverless/testing.html#administration-pages)).
 
-The screenshots on this page are taken with `bin/screenshots` (headless Chromium in Docker, with Redmine's test data). Run it after changing a screen.
+The screenshots on this page are taken with `bin/screenshots` (headless Chromium in Apple container when it runs, else in Docker, with Redmine's test data). Run it after changing a screen.
