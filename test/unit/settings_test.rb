@@ -2,6 +2,11 @@
 
 require_relative '../test_helper'
 
+# A repository type built on Git, as redmine_kit_codecommit's Codecommit is.
+# rubocop:disable Style/ClassAndModuleChildren -- named in Redmine's Repository namespace, as Repository.factory finds it
+class Repository::LambdaTestGit < Repository::Git; end
+# rubocop:enable Style/ClassAndModuleChildren
+
 module RedmineKit
   module Aws
     module Lambda
@@ -40,6 +45,21 @@ module RedmineKit
 
             assert_equal %w[Git], Setting.enabled_scm
           end
+        end
+
+        # A type built on Git or Subversion (Codecommit) runs with their
+        # clients: it stays enabled and listed on Lambda.
+        def test_a_type_built_on_git_stays_on_lambda
+          Redmine::Scm::Base.add 'LambdaTestGit'
+          Setting.enabled_scm = %w[Git LambdaTestGit Mercurial]
+          on_lambda do
+            assert_equal %w[Git LambdaTestGit], Setting.enabled_scm
+            assert_equal %w[Subversion Git LambdaTestGit], Redmine::Scm::Base.all
+            assert Repository::LambdaTestGit.new(project: Project.find(3), url: '/tmp/repo.git',
+                                                 identifier: 'kit').valid?
+          end
+        ensure
+          Redmine::Scm::Base.delete 'LambdaTestGit'
         end
 
         def test_standard_without_the_role

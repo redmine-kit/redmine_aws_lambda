@@ -34,7 +34,8 @@ module RedmineKit
 
         # Runs the block as in a process started on Lambda: with the role, and
         # with what Settings.install does at start-up then (the repository types
-        # other than Settings::SCM removed). Redmine's list is restored after.
+        # other than Settings::SCM and those built on them removed). Redmine's
+        # list is restored after.
         def on_lambda(role = 'web')
           saved = Redmine::Scm::Base.all.dup
           with_role(role) do

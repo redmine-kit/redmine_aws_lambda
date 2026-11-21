@@ -59,7 +59,7 @@ Lambda 上 (`REDMINE_ROLE` があるとき) では、プラグインが Redmine 
 | `/events` | どのメソッドでも、どの `Host` でも、SQL もセッションの Cookie もなしに 204 を返す。`/events/` や `/events.json` を含め、ほかのパスは通す。ロールがなければ 404。ミドルウェアは先頭にある |
 | 転送されたホスト | ドメインだけを許す Rails のホストの認可の前に置き、`Host` に関数 URL のホスト名を入れたリクエストを送る。`X-Forwarded-Host` にドメインがあれば 200 で、URL もドメインで作る。値が複数なら最後の値を使う。`X-Forwarded-Host` がない、ほかのホスト、関数 URL のホスト名なら 403。ロールがなければ 403 (Rails の標準の動作)。ミドルウェアは `/events` のすぐ後にある |
 | アセットの確認 | `REDMINE_ROLE` のある新しいプロセスで `false`。ロールがなければ変わらない |
-| 固定する設定 | Lambda では読み出しが固定の値を返し、保存しても変わらない。ロールがなければ Redmine の標準のまま。設定の画面は、それらのチェックボックスを押せない状態にして注記を添え、Subversion と Git だけを表示する。ほかのチェックボックスは Redmine の表示のまま。ほかのリポジトリの種類は Lambda 上でだけ Redmine の一覧から外す |
+| 固定する設定 | Lambda では読み出しが固定の値を返し、保存しても変わらない。ロールがなければ Redmine の標準のまま。設定の画面は、それらのチェックボックスを押せない状態にして注記を添え、Subversion と Git、およびそれらをもとにした種類だけを表示する。ほかのチェックボックスは Redmine の表示のまま。ほかのリポジトリの種類は Lambda 上でだけ Redmine の一覧から外す |
 | 差し替えたコード | Redmine の `Setting.define_setting` と `SettingsHelper#setting_check_box` の SHA-256 を比べ、Redmine のバージョンアップで変わったら気づけるようにする |
 | ステータスのタブ | Redmine Kit AWS のタブの Lambda 関数と読み取り専用の設定。タブの項目の間の順序。ロールがなければデータなし |
 | コードの読み込み | 新しいプロセスで確認する。`zeitwerk:check` が通る。boot のファイルを読み込んだ状態で、Redmine Kit AWS とこのプラグインが起動する |

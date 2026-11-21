@@ -15,11 +15,20 @@ module RedmineKit
           mail_handler_api_enabled: '0'
         }.freeze
 
-        # The repository types whose clients the image has. The others stay off
-        # whatever is saved, and on Lambda they are removed from Redmine's list
-        # of repository types, so that the settings page and the repository
-        # form don't offer them.
+        # The repository types whose clients the image has: these and the
+        # types built on them (a subclass of their repository model, such as
+        # redmine_kit_codecommit's Codecommit, a Git repository). The others
+        # stay off whatever is saved, and on Lambda they are removed from
+        # Redmine's list of repository types, so that the settings page and the
+        # repository form don't offer them.
         SCM = %w[Subversion Git].freeze
+
+        # Whether the repository type (a name of Redmine::Scm::Base) is one of
+        # SCM or built on one, by its model, as Repository.factory finds it.
+        def self.scm?(name)
+          model = "Repository::#{name}".safe_constantize
+          model.is_a?(Class) && SCM.any? { |base| model <= "Repository::#{base}".constantize }
+        end
 
         # Setting.<name> and Setting.<name>?, which Setting.define_setting
         # writes; super is Redmine's reader, used without the role.
@@ -31,7 +40,7 @@ module RedmineKit
         # Setting.enabled_scm, which Repository#repo_create_validation and the
         # repository form (RepositoriesHelper#scm_select_tag) read.
         def enabled_scm
-          Lambda.lambda? ? super & SCM : super
+          Lambda.lambda? ? super.select { |name| Settings.scm?(name) } : super
         end
 
         # Called from setup, on every code reload: after Redmine's own
@@ -42,7 +51,7 @@ module RedmineKit
           return unless Lambda.lambda?
 
           # Redmine::Scm::Base.delete: Redmine's way to remove a repository type.
-          (Redmine::Scm::Base.all - SCM).each { |name| Redmine::Scm::Base.delete(name) }
+          Redmine::Scm::Base.all.reject { |name| scm?(name) }.each { |name| Redmine::Scm::Base.delete(name) }
         end
       end
     end
