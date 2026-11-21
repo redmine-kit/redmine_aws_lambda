@@ -31,7 +31,7 @@ db="redmine_test_$$"
 setup='bin/rails db:drop db:create db:migrate redmine:plugins:migrate db:schema:dump >/dev/null'
 teardown='; status=$?; bin/rails db:drop >/dev/null 2>&1; exit $status'
 run() {
-  "$cli" run --rm --network "$network" "${opts[@]}" -e TEST_DATABASE="$db" "$image" \
+  "$cli" run --rm "${run_opts[@]}" --network "$network" "${opts[@]}" -e TEST_DATABASE="$db" "$image" \
     sh -c "$setup"' && "$@"'"$teardown" test "$@"
 }
 # The plugin's tests; with COVERAGE set, in one process with the coverage
