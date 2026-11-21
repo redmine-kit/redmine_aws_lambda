@@ -3,9 +3,8 @@
 require_relative '../test_helper'
 
 # A repository type built on Git, as redmine_kit_codecommit's Codecommit is.
-# rubocop:disable Style/ClassAndModuleChildren -- named in Redmine's Repository namespace, as Repository.factory finds it
+# rubocop:disable-next Style/ClassAndModuleChildren -- in Redmine's Repository namespace, as Repository.factory finds it
 class Repository::LambdaTestGit < Repository::Git; end
-# rubocop:enable Style/ClassAndModuleChildren
 
 module RedmineKit
   module Aws
