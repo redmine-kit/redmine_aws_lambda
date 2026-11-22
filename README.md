@@ -15,6 +15,14 @@ A Redmine plugin for running Redmine on AWS Lambda: the Lambda Web Adapter `/eve
 - Website: https://redmine-kit.github.io/redmine_aws_lambda/ ([日本語](https://redmine-kit.github.io/redmine_aws_lambda/ja/))
 - Markdown: [docs/README.md](docs/README.md) ([日本語](docs/ja/README.md)), with [setup](docs/setup.md), [IAM permissions](docs/iam.md) and the [administration pages](docs/admin.md)
 
+## Help
+
+With [Redmine Kit Help](https://github.com/redmine-kit/redmine_help) installed, the plugin's help is in `help/`: the topic Redmine on AWS Lambda (English and Japanese), and two sections in the guide's topic Application Settings (after Incoming emails and after Repositories), labelled with the plugin's name. The plugin has no screen of its own, so it has no `help/map.yml`. Check it against the installed guide from Redmine's folder:
+
+```sh
+bin/rails redmine_kit:help:check PLUGIN=redmine_kit_aws_lambda
+```
+
 ## Sponsors
 
 <a href="https://www.keyselect.co.jp/">

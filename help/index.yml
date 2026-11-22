@@ -1,5 +1,6 @@
-# The sidebar section of this plugin's help, read by redmine_help
-# (https://github.com/redmine-kit/redmine_help, docs/extending.md).
+# The sidebar section of this plugin's help, read by Redmine Kit Help
+# (redmine_kit_help's docs/extending.md). The plugin has no screen of its own, so it has no map.yml: its values are
+# on Redmine Kit AWS's Status tab, and its settings notes are sections in the guide's Application Settings.
 sections:
   - id: aws-lambda
     title: Redmine Kit AWS Lambda

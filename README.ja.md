@@ -17,6 +17,16 @@ Redmine を AWS Lambda で動かすための Redmine のプラグインです。
 - Web サイト: https://redmine-kit.github.io/redmine_aws_lambda/ja/ (English: https://redmine-kit.github.io/redmine_aws_lambda/)
 - Markdown: [docs/ja/README.md](docs/ja/README.md) (English: [docs/README.md](docs/README.md))。[導入](docs/ja/setup.md)、[IAM 権限](docs/ja/iam.md)、[管理画面](docs/ja/admin.md) があります。
 
+<a id="help"></a>
+
+## ヘルプ
+
+[Redmine Kit Help](https://github.com/redmine-kit/redmine_help) をインストールしていれば、プラグインのヘルプは `help/` にあります。トピック「AWS Lambda 上の Redmine」(英語と日本語) と、ガイドのトピック「設定」の 2 つのセクション (「受信メール」のあとと「リポジトリ」のあと、プラグインの名前のラベル付き) です。プラグインに専用の画面はないので、`help/map.yml` はありません。Redmine のディレクトリで、インストールされたガイドに対してチェックできます。
+
+```sh
+bin/rails redmine_kit:help:check PLUGIN=redmine_kit_aws_lambda
+```
+
 <a id="sponsors"></a>
 
 ## スポンサー
