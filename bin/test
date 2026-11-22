@@ -15,6 +15,7 @@ source bin/container_cli
 source bin/test_slot
 plugin=redmine_kit_aws_lambda
 name=redmine-kit-aws-lambda-test
+stop_services_at_exit "$name"
 bin/services >/dev/null
 source bin/test_image
 if [[ "$cli" == docker ]]; then
