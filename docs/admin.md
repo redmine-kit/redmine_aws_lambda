@@ -6,7 +6,7 @@ The specifications in this page were checked against official information and th
 
 ## Status
 
-The plugin adds two sections to the "Status" tab of Redmine Kit AWS (Administration › AWS › Status): the Lambda function before the versions, and the read-only settings after them. Only administrators can open the tab, and it shows no secrets.
+The plugin adds two sections to the "Status" tab of Redmine Kit AWS (Administration › AWS › Status): the Lambda function before the versions, and the read-only settings after them. Only administrators can open the tab, and it shows no secrets. The sections are rows of values (`RedmineKit::Aws::Lambda::Status.function_rows` and `fixed_settings_rows`, registered with `register_status_section`), which Redmine's page and the new UI's Status tab of Redmine Kit AWS both draw ([its admin.md](https://redmine-kit.github.io/redmine_aws/admin.html#in-the-new-ui)); this plugin has no screen of its own in the new UI.
 
 ![The Status tab on Lambda after Test: the Lambda function, the versions, the read-only settings and the results of the connection test](./images/status.png)
 

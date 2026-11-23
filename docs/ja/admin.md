@@ -8,7 +8,7 @@ Redmine Kit AWS Lambda が Redmine の管理画面に表示するもの (「ス�
 
 ## ステータス
 
-プラグインは、Redmine Kit AWS の「ステータス」のタブ (「管理」›「AWS」›「ステータス」) に 2 つの項目を追加します。バージョンの前に Lambda 関数、後に読み取り専用の設定です。タブを開けるのはシステム管理者だけで、シークレットは表示しません。
+プラグインは、Redmine Kit AWS の「ステータス」のタブ (「管理」›「AWS」›「ステータス」) に 2 つの項目を追加します。バージョンの前に Lambda 関数、後に読み取り専用の設定です。タブを開けるのはシステム管理者だけで、シークレットは表示しません。項目は値の行 (`RedmineKit::Aws::Lambda::Status.function_rows` と `fixed_settings_rows`。`register_status_section` で登録します) で、Redmine の画面と、Redmine Kit AWS の新しい UI の「ステータス」タブの両方が描画します ([そのプラグインの admin.md](https://redmine-kit.github.io/redmine_aws/ja/admin.html#in-the-new-ui))。このプラグインは、新しい UI に自身の画面を持ちません。
 
 ![Lambda で「テスト」を押したあとの「ステータス」のタブ。Lambda 関数、バージョン、読み取り専用の設定、接続テストの結果](./images/status.png)
 

@@ -29,7 +29,7 @@ They put their administration pages under the one "AWS" item of Redmine's admini
 
 ## Code layout
 
-What must be in place before Rails initializes (the `/events` and forwarded host middlewares and the asset setting) is in `boot/redmine_kit_aws_lambda.rb`. Because the plugin is also a gem, Bundler loads this file ([setup.md](setup.md#installation)). The rest is in `lib/redmine_kit/aws/lambda.rb`, `lib/redmine_kit/aws/lambda/` and `app/`, which Redmine loads, and `init.rb` turns it on and adds the sections of the "Status" tab. The code is under the `RedmineKit::Aws` namespace of Redmine Kit AWS: `RedmineKit::Aws::Lambda`, with `RedmineKit::Aws::Lambda::Boot` in `boot/`.
+What must be in place before Rails initializes (the `/events` and forwarded host middlewares and the asset setting) is in `boot/redmine_kit_aws_lambda.rb`. Because the plugin is also a gem, Bundler loads this file ([setup.md](setup.md#installation)). The rest is in `lib/redmine_kit/aws/lambda.rb`, and `lib/redmine_kit/aws/lambda/`, which Redmine loads, and `init.rb` turns it on and adds the sections of the "Status" tab. The code is under the `RedmineKit::Aws` namespace of Redmine Kit AWS: `RedmineKit::Aws::Lambda`, with `RedmineKit::Aws::Lambda::Boot` in `boot/`.
 
 The plugin calls no AWS API itself, so it needs no AWS SDK gem. It adds no database tables, so there are no migrations to run. Each piece of replaced code has tests written with Redmine's standard mechanism (`rake redmine:plugins:test`) ([setup.md](setup.md#tests)).
 

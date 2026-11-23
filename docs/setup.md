@@ -43,7 +43,7 @@ Without it, Redmine stops at boot and names it. Installed as a gem, this plugin 
 
 ### Gem
 
-`bin/release` publishes each version of the plugin as a gem to GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`, [Releasing](#releasing)). The gem holds the run-time files (`init.rb`, `boot/`, `lib/`, `app/`, `config/`, `help/`, `LICENSE`); the plugin's `Gemfile` is not in it. It depends on the gem of Redmine Kit AWS, which Bundler installs with it. Redmine loads plugins only from `plugins/`, so the installed gems are linked there:
+`bin/release` publishes each version of the plugin as a gem to GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`, [Releasing](#releasing)). The gem holds the run-time files (`init.rb`, `boot/`, `lib/`, `config/`, `help/`, `LICENSE`); the plugin's `Gemfile` is not in it. It depends on the gem of Redmine Kit AWS, which Bundler installs with it. Redmine loads plugins only from `plugins/`, so the installed gems are linked there:
 
 ```ruby
 # Redmine's Gemfile.local

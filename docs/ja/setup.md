@@ -52,7 +52,7 @@ Redmine Kit AWS Lambda を使う Redmine に必要なもの (インストール�
 
 ### gem
 
-`bin/release` が、各バージョンのプラグインを gem として GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`。[リリース](#releasing)) に公開します。gem には、実行に必要なファイル (`init.rb`、`boot/`、`lib/`、`app/`、`config/`、`help/`、`LICENSE`) が入ります。プラグインの `Gemfile` は入れません。gem は Redmine Kit AWS の gem に依存するので、Bundler がいっしょにインストールします。Redmine は `plugins/` のプラグインだけを読み込むので、インストールした gem をそこにリンクします。
+`bin/release` が、各バージョンのプラグインを gem として GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`。[リリース](#releasing)) に公開します。gem には、実行に必要なファイル (`init.rb`、`boot/`、`lib/`、`config/`、`help/`、`LICENSE`) が入ります。プラグインの `Gemfile` は入れません。gem は Redmine Kit AWS の gem に依存するので、Bundler がいっしょにインストールします。Redmine は `plugins/` のプラグインだけを読み込むので、インストールした gem をそこにリンクします。
 
 ```ruby
 # Redmine の Gemfile.local
