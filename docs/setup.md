@@ -5,8 +5,22 @@ What a Redmine server needs to use Redmine Kit AWS Lambda: installation, configu
 ## Requirements
 
 - Redmine 7.0 or later on PostgreSQL.
-- [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/) 0.1 or later in `plugins/redmine_kit_aws` ([its setup](https://redmine-kit.github.io/redmine_aws/setup.html)).
 - On AWS Lambda: a container image with Lambda Web Adapter, as in [Serverless](https://redmine-kit.github.io/serverless/lambda.html#image). Outside Lambda (without `REDMINE_ROLE`), the plugin's features stay off and Redmine behaves as standard.
+
+### Required plugins
+
+| Plugin | Used for |
+| --- | --- |
+| [Redmine Kit AWS](https://github.com/redmine-kit/redmine_aws) | the AWS administration menu and the settings shared by the AWS plugins |
+
+Without it, Redmine stops at boot and names it. Installed as a gem, this plugin installs it
+([Installation](#installation)).
+
+### Optional plugins
+
+| Plugin | With it |
+| --- | --- |
+| [Redmine Kit Help](https://github.com/redmine-kit/redmine_help) | this plugin's help in the Help panel |
 
 ## Installation
 
@@ -29,7 +43,7 @@ What a Redmine server needs to use Redmine Kit AWS Lambda: installation, configu
 
 ### Gem
 
-Each version tag (`v*`) publishes the plugin as a gem to GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`; `.github/workflows/gem.yml`). The gem holds the run-time files (`init.rb`, `boot/`, `lib/`, `app/`, `config/`, `help/`, `LICENSE`); the plugin's `Gemfile` is not in it. It depends on the gem of Redmine Kit AWS, which Bundler installs with it. Redmine loads plugins only from `plugins/`, so the installed gems are linked there:
+`bin/release` publishes each version of the plugin as a gem to GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`, [Releasing](#releasing)). The gem holds the run-time files (`init.rb`, `boot/`, `lib/`, `app/`, `config/`, `help/`, `LICENSE`); the plugin's `Gemfile` is not in it. It depends on the gem of Redmine Kit AWS, which Bundler installs with it. Redmine loads plugins only from `plugins/`, so the installed gems are linked there:
 
 ```ruby
 # Redmine's Gemfile.local
@@ -87,7 +101,7 @@ A run stops the service containers it started (it doesn't remove them) when it e
 
 With `COVERAGE=1`, the plugin's tests also write the coverage of the plugin's own files (SimpleCov, Cobertura XML in `coverage/coverage.xml`) and run in one process. CI sets it on Ruby 4.0 and uploads the report to [Codecov](https://codecov.io/gh/redmine-kit/redmine_aws_lambda) with the flag `plugin`. The upload authenticates with OIDC (`id-token: write`), so no token is stored as a secret. Codecov's statuses are informational and never fail a commit or a pull request (`codecov.yml`).
 
-`bin/test-gem` checks the gem: it builds the gems of the plugin and of Redmine Kit AWS from the checkouts, installs them as [Gem](#gem) says, links them into `plugins/` and starts Redmine with every file loaded (`zeitwerk:check`, and the production environment, which loads them at start-up). CI runs it too, so a file missing from the gem fails before a version tag publishes it.
+`bin/test-gem` checks the gem: it builds the gems of the plugin and of Redmine Kit AWS from the checkouts, installs them as [Gem](#gem) says, links them into `plugins/` and starts Redmine with every file loaded (`zeitwerk:check`, and the production environment, which loads them at start-up). `bin/release` runs it too, so a file missing from the gem fails before a release publishes it.
 
 ```sh
 bin/test            # the plugin's tests and Redmine's tests around them
@@ -98,6 +112,16 @@ bin/lint            # RuboCop
 bin/screenshots     # the screenshots of admin.md
 bin/services --down # stops PostgreSQL
 ```
+
+## Releasing
+
+`bin/release` publishes the gem of the gemspec's version to Redmine Kit's registry on GitHub Packages, from a clean
+`main` only: the version must be newer than the last tag `v<version>`, the required plugins must resolve from the
+registry at their ranges (`config/dependencies.yml`), and `bin/lint`, `bin/test` and `bin/test-gem` must pass. It
+pushes with the key `github` of `~/.gem/credentials` (`:github: Bearer <token>`, a token with `write:packages`) and
+reads the registry with `BUNDLE_RUBYGEMS__PKG__GITHUB__COM`; no token goes into the repository or the output. It makes
+the signed tag `v<version>` and prints the command that pushes it. Versions are semantic: a change that breaks a plugin
+using this one raises the major version (the minor one before 1.0), and the ranges in the plugins that require it.
 
 ## To verify
 

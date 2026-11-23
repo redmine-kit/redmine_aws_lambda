@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
 # The plugin as a gem, published to GitHub Packages (.github/workflows/gem.yml).
 # The gem holds the plugin's run-time files, so that the installed gem can be
 # linked into Redmine's plugins/ (docs/setup.md#installation). The plugin's
@@ -17,7 +19,10 @@ Gem::Specification.new do |spec|
   # boot/ holds what Bundler loads before Rails initializes; lib/ is Redmine's
   # (autoloaded) and must not be required by Bundler.
   spec.require_paths = ['boot']
-  spec.add_dependency 'redmine_kit_aws', '~> 0.1'
   spec.metadata['github_repo'] = 'ssh://github.com/redmine-kit/redmine_aws_lambda'
+  # The plugins it requires (config/dependencies.yml): installing the gem installs them.
+  YAML.safe_load_file(File.join(__dir__, 'config/dependencies.yml'))['requires'].each do |name, range|
+    spec.add_dependency name, range
+  end
   spec.metadata['rubygems_mfa_required'] = 'true'
 end
