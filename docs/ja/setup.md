@@ -31,28 +31,16 @@ Redmine Kit AWS Lambda を使う Redmine に必要なもの (インストール�
 
 ## インストール
 
-1. プラグインを Redmine 7.0 の `plugins/redmine_kit_aws_lambda` に、Redmine Kit AWS を `plugins/redmine_kit_aws` に置きます。下の gem か、それぞれのリポジトリのチェックアウトです。チェックアウトのディレクトリ名は、リポジトリ名ではなく、プラグインの ID にします (`git clone https://github.com/redmine-kit/redmine_aws_lambda.git plugins/redmine_kit_aws_lambda`、`git clone https://github.com/redmine-kit/redmine_aws.git plugins/redmine_kit_aws`)。
-2. プラグインを gem として `Gemfile.local` に追加し、インストールします。
-
-   ```sh
-   bundle install
-   ```
-
-   こうすると、Bundler が、Rails の初期化より前に `boot/redmine_kit_aws_lambda.rb` を読み込みます。`/events` と転送されたホストのミドルウェア、アセットの設定はそのときまでに必要で、Redmine がプラグインを読み込む (`init.rb`) のでは間に合わないからです。チェックアウトなら、両方をパスで追加します。Redmine Kit AWS は、プラグインの gemspec が必要とするので追加します。Bundler は読み込みません (読み込むのは Redmine です)。ほかの Redmine Kit AWS のプラグインをパスで追加するときも、`redmine_kit_aws` の行は 1 つだけにします。
-
-   ```ruby
-   # Redmine の Gemfile.local
-   gem 'redmine_kit_aws', path: 'plugins/redmine_kit_aws', require: false
-   gem 'redmine_kit_aws_lambda', path: 'plugins/redmine_kit_aws_lambda'
-   ```
-
-3. migration は不要です。
+1. プラグインを gem としてインストールするか ([gem](#gem))、プラグインと、これが必要とする [Redmine Kit AWS](https://redmine-kit.github.io/redmine_aws/ja/) のチェックアウトを Redmine の `plugins/` に置きます ([gem を使わないとき](#without-the-gem))。順序は問いません。`redmine_kit_aws` がないときは、Redmine が起動時に停止し、その名前を示します ([必須プラグイン](#required-plugins))。
+2. Redmine のフォルダーで `bundle install` を実行します。
+3. マイグレーションは不要です。
+4. Redmine を再起動します。
 
 <a id="gem"></a>
 
 ### gem
 
-`bin/release` が、各バージョンのプラグインを gem として GitHub Packages (`https://rubygems.pkg.github.com/redmine-kit`。[リリース](#releasing)) に公開します。gem には、実行に必要なファイル (`init.rb`、`boot/`、`lib/`、`config/`、`help/`、`LICENSE`) が入ります。プラグインの `Gemfile` は入れません。gem は Redmine Kit AWS の gem に依存するので、Bundler がいっしょにインストールします。Redmine は `plugins/` のプラグインだけを読み込むので、インストールした gem をそこにリンクします。
+**gem として** (推奨): Redmine の `Gemfile.local` に、GitHub Packages にある Redmine Kit のレジストリ (`https://rubygems.pkg.github.com/redmine-kit`。`bin/release` が公開します: [リリース](#releasing)) のブロックで追加します。このプラグインが必要とするプラグイン ([必須プラグイン](#required-plugins)) も Bundler がそこから取得し、これらの gem を rubygems.org から取得することはありません。レジストリには、公開のパッケージでも `read:packages` を持つ GitHub のトークンが必要です。Bundler には環境変数 `BUNDLE_RUBYGEMS__PKG__GITHUB__COM` (`<user>:<token>`) で渡し、リポジトリのファイルには書きません。
 
 ```ruby
 # Redmine の Gemfile.local
@@ -61,22 +49,28 @@ source 'https://rubygems.pkg.github.com/redmine-kit' do
 end
 ```
 
-```sh
-bundle config set --global rubygems.pkg.github.com <ユーザー>:<トークン>   # か、変数 BUNDLE_RUBYGEMS__PKG__GITHUB__COM
-bundle install
-ln -s "$(bundle info --path redmine_kit_aws)" plugins/redmine_kit_aws
-ln -s "$(bundle info --path redmine_kit_aws_lambda)" plugins/redmine_kit_aws_lambda
-```
-
-GitHub Packages からインストールするには、公開のパッケージでも、`read:packages` の権限を持つ GitHub のトークンが必要です。ほかのリポジトリのワークフローは、パッケージの設定 (「Manage Actions access」) でそのリポジトリに Read を与えると、自分の `GITHUB_TOKEN` (`packages: read`) で読めます。
-
-Bundler は、それぞれのリポジトリからもプラグインをインストールできます。この場合、トークンは不要です。`plugins/` へのリンクは上と同じです。
+**リポジトリから** (開発用): Bundler は gem を git から取得します。Bundler は gem が必要とするプラグインを git からは取得しないので、その行も追加します。
 
 ```ruby
 # Redmine の Gemfile.local
-gem 'redmine_kit_aws', git: 'https://github.com/redmine-kit/redmine_aws.git', tag: 'v0.1.0', require: false
-gem 'redmine_kit_aws_lambda', git: 'https://github.com/redmine-kit/redmine_aws_lambda.git', tag: 'v0.1.0'
+gem 'redmine_kit_aws', git: 'https://github.com/redmine-kit/redmine_aws.git', branch: 'main'
+gem 'redmine_kit_aws_lambda', git: 'https://github.com/redmine-kit/redmine_aws_lambda.git', branch: 'main'
 ```
+
+Bundler が `boot/redmine_kit_aws_lambda.rb` を読み込み、gem のフォルダーと、依存する gem の Redmine Kit AWS のフォルダーを Redmine のプラグインローダーに渡します。Redmine は `plugins/` のプラグインと同じく、gem の `init.rb` を実行し、アセット、文字列、ビュー、マイグレーションを使い、`lib/` と `app/` を Rails のコードローダーに追加し、ルートを追加するので、`plugins/` へのリンクは不要です。`plugins/` に同じ id のフォルダーがあれば、そちらが優先されます。 このファイルは、Rails の初期化より前に必要なことも行います。`/events` と転送されたホストのミドルウェア、アセットの設定はそのときまでに必要で、Redmine が `init.rb` を実行するのでは間に合わないからです。 gem には実行に必要なファイルが入り、プラグインの `Gemfile` は入りません。
+
+<a id="without-the-gem"></a>
+
+### gem を使わないとき
+
+リポジトリを Redmine の `plugins/` にクローンします。フォルダー名は、リポジトリ名ではなく、プラグインの ID にします。
+
+```sh
+git clone https://github.com/redmine-kit/redmine_aws.git plugins/redmine_kit_aws
+git clone https://github.com/redmine-kit/redmine_aws_lambda.git plugins/redmine_kit_aws_lambda
+```
+
+Redmine の `Gemfile` が読み込むプラグインの `Gemfile` が、プラグインをパスで指定するので、gem と同じく Bundler が Rails の初期化より前に `boot/redmine_kit_aws_lambda.rb` を読み込みます。隣のチェックアウトの Redmine Kit AWS もパスで指定します (どちらも、`Gemfile.local` かほかのプラグインの `Gemfile` がすでに指定していなければ)。`Gemfile.local` に行を追加する必要はありません。
 
 <a id="configuration"></a>
 
@@ -120,13 +114,13 @@ gem 'redmine_kit_aws_lambda', git: 'https://github.com/redmine-kit/redmine_aws_l
 
 `COVERAGE=1` を付けると、プラグインのテストは、プラグイン自身のファイルのカバレッジ (SimpleCov。Cobertura の XML の `coverage/coverage.xml`) も出力し、1 プロセスで実行します。CI は Ruby 4.0 でこれを有効にし、レポートを `plugin` フラグで [Codecov](https://codecov.io/gh/redmine-kit/redmine_aws_lambda) に送信します。送信の認証は OIDC (`id-token: write`) なので、トークンをシークレットに保存しません。Codecov のステータスは参考情報で、コミットや Pull Request を失敗にしません (`codecov.yml`)。
 
-`bin/test-gem` は gem を確認します。チェックアウトからプラグインと Redmine Kit AWS の gem をビルドし、[gem](#gem) のとおりにインストールして `plugins/` にリンクし、すべてのファイルを読み込んで Redmine を起動します (`zeitwerk:check` と、起動時にすべてを読み込む production 環境)。`bin/release` もこれを実行するので、gem にないファイルがあれば、リリースで公開する前に失敗します。
+`bin/test-gem` は、組織のプラグインのテンプレートと同じく gem を確認します。チェックアウトからプラグインと Redmine Kit AWS の gem をビルドし、チェックアウトを `plugins/` から外して [gem](#gem) のとおりにインストールし、すべてのファイルを読み込んで Redmine を起動します (`zeitwerk:check` と、起動時にすべてを読み込む production 環境)。各プラグインが gem のフォルダーから、boot のファイル、コード、ルート、マイグレーション、アセットとともに読み込まれることを確認し、チェックアウトを `plugins/` に戻して、チェックアウトが優先されることも確認します。。`bin/release` もこれを実行するので、gem にないファイルがあれば、リリースで公開する前に失敗します。
 
 ```sh
 bin/test            # プラグインのテストと、関係する Redmine のテスト
 bin/test --redmine  # Redmine のすべてのテストも実行する
 COVERAGE=1 bin/test # カバレッジを coverage/coverage.xml に出力する
-bin/test-gem        # gem をビルド・インストールし、plugins/ にリンクして起動する
+bin/test-gem        # gem をビルド・インストールし、gem から、次に plugins/ から起動する
 bin/lint            # RuboCop
 bin/screenshots     # admin.md のスクリーンショット
 bin/services --down # PostgreSQL を停止する
