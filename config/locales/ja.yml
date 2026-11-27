@@ -5,7 +5,7 @@ ja:
   label_aws_lambda_function: Lambda 関数
   label_aws_lambda_fixed_settings: 読み取り専用の設定
   field_aws_lambda_function_name: 関数名
-  field_aws_lambda_function_role: 役割
+  field_aws_lambda_function_role: 実行ロール
   field_aws_lambda_function_version: バージョン
   field_aws_lambda_function_memory: メモリ
   field_aws_lambda_function_region: リージョン
